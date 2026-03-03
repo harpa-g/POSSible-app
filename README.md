@@ -3,7 +3,9 @@
 
 A more hospitality-centered payment system, based on choice and feedback. Customers can offer tips without being pressured to do so. Pay with Revolut, no NFC needed.
 
+
 As someone who has a part-time job in the hospitality industry, I felt the need to create an app that would let customers and workers acknowledge eachother. Workers must feel content about their hard work, and customers should be motivated to appreciate and empathize with their servers. When prompted for pay, the customer must type in a sum that is greater/equal to their bill's worth.
+
 
 The concept of POSSible, in more detail, from:
 
