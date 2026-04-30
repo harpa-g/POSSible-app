@@ -1,8 +1,157 @@
-.page { padding: 20px; }
-.split { display: flex; gap: 40px; }
-.menuSection, .tabSection { flex: 1; }
-.list { list-style: none; padding: 0; }
-.total { margin: 20px 0; font-size: 1.2rem; }
-.payment { display: flex; gap: 10px; }
-.payment input { flex: 1; }
-.extra { font-style: italic; color: #666; }
+.page {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.page h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2e2e2e;
+  margin-bottom: 1.5rem;
+}
+
+.message {
+  background-color: #eef7ee;
+  color: #2e7d32;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+/* Menu side */
+.menuSection {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.menuSection h2 {
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  color: #444;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Tab side */
+.tabSection {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.tabSection h2 {
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  color: #444;
+}
+
+.tabSection ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tabSection li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.tabSection li button {
+  background: none;
+  border: 1px solid #e0b4a0;
+  color: #b1533a;
+  padding: 0.25rem 0.7rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  transition: all 0.2s;
+}
+
+.tabSection li button:hover {
+  background: #fdf0eb;
+}
+
+.tabSection h3 {
+  margin-top: 1.5rem;
+  font-size: 1rem;
+  color: #888;
+}
+
+.removedItem {
+  color: #999;
+  font-style: italic;
+}
+
+.total {
+  margin: 1.5rem 0 1rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+  text-align: right;
+  border-top: 2px solid #eee;
+  padding-top: 1rem;
+}
+
+.payment {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  background: #faf7f3;
+  padding: 1.5rem;
+  border-radius: 10px;
+  margin-top: 1rem;
+}
+
+.payment input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.payment input:focus {
+  outline: none;
+  border-color: #d49b6a;
+}
+
+.payment button {
+  background-color: #d49b6a;
+  color: white;
+  border: none;
+  padding: 0.85rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.payment button:hover {
+  background-color: #c28650;
+}
+
+.extra {
+  font-size: 0.85rem;
+  color: #888;
+  text-align: center;
+  margin-top: 0.25rem;
+  font-style: italic;
+}

@@ -1,6 +1,7 @@
 package com.wad.ecommerce.controller;
 
 import com.wad.ecommerce.model.Tab;
+import com.wad.ecommerce.model.Feedback;
 import com.wad.ecommerce.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;

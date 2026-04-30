@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login, saveAuth } from '../../services/auth.service';
-import styles from './LoginPage.module.css';
+import { Paper, Title, TextInput, PasswordInput, Button, Alert, Text } from '@mantine/core';
 
 export default function LoginPage({ onLoginSuccess }) {
     const [username, setUsername] = useState('');
@@ -18,7 +18,6 @@ export default function LoginPage({ onLoginSuccess }) {
             const data = await login(username, password);
             saveAuth(data);
             onLoginSuccess(data);
-            // Redirect based on role
             if (data.role === 'CUSTOMER') navigate('/tab');
             else if (data.role === 'SERVER') navigate('/server');
             else if (data.role === 'OWNER') navigate('/owner');
@@ -31,27 +30,35 @@ export default function LoginPage({ onLoginSuccess }) {
     }
 
     return (
-        <div className={styles.page}>
-            <div className={styles.card}>
-                <h1 className={styles.title}>Login to POSSible</h1>
-                <form onSubmit={handleSubmit} className={styles.form}>
-                    <div className={styles.field}>
-                        <label>Username</label>
-                        <input type="text" value={username} onChange={e => setUsername(e.target.value)} required autoFocus />
-                    </div>
-                    <div className={styles.field}>
-                        <label>Password</label>
-                        <input type="password" value={password} onChange={e => setPassword(e.target.value)} required />
-                    </div>
-                    {error && <p className={styles.error}>{error}</p>}
-                    <button type="submit" className="btn-primary" disabled={loading}>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
+            <Paper radius="lg" withBorder shadow="md" p="xl" style={{ width: '100%', maxWidth: 380 }}>
+                <Title order={2} ta="center" mb="md" c="terracotta.7">Login to POSSible</Title>
+                <form onSubmit={handleSubmit}>
+                    <TextInput
+                        label="Username"
+                        placeholder="your username"
+                        value={username}
+                        onChange={(e) => setUsername(e.currentTarget.value)}
+                        required
+                        autoFocus
+                    />
+                    <PasswordInput
+                        label="Password"
+                        placeholder="your password"
+                        value={password}
+                        onChange={(e) => setPassword(e.currentTarget.value)}
+                        required
+                        mt="sm"
+                    />
+                    {error && <Alert color="red" mt="sm">{error}</Alert>}
+                    <Button type="submit" fullWidth mt="md" loading={loading} color="terracotta">
                         {loading ? 'Logging in...' : 'Login'}
-                    </button>
+                    </Button>
                 </form>
-                <p className={styles.hint}>
+                <Text c="dimmed" size="xs" ta="center" mt="md">
                     customer / customer &nbsp; | &nbsp; server / server &nbsp; | &nbsp; owner / owner
-                </p>
-            </div>
+                </Text>
+            </Paper>
         </div>
     );
 }

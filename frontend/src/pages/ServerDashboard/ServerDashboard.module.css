@@ -1,25 +1,40 @@
 .page {
-  max-width: 860px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
 }
 
-.header {
+.page h1 {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.page ul {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.page li {
+  background: white;
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.03);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1.25rem;
 }
 
-.title {
-  font-size: 1.75rem;
-  color: #1e293b;
+.page li button {
+  background: #d49b6a;
+  color: white;
+  border: none;
+  padding: 0.4rem 1rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  transition: background 0.2s;
 }
 
-.list {
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+.page li button:hover {
+  background: #c28650;
 }

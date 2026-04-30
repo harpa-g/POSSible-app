@@ -1,16 +1,16 @@
+import { Container, Title, Text, Button } from '@mantine/core';
 import { Link } from 'react-router-dom';
-import { isLoggedIn } from '../../services/auth.service';
-import styles from './HomePage.module.css';
 
 export default function HomePage() {
     return (
-        <div className={styles.page}>
-            <h1 className={styles.title}>Hello</h1>
-            <p className={styles.subtitle}>Welcome to WAD Shop.</p>
-            {isLoggedIn()
-                ? <Link to="/products" className="btn-primary">Shop Now</Link>
-                : <Link to="/login" className="btn-primary">Login to Shop</Link>
-            }
-        </div>
+        <Container size="sm" style={{ textAlign: 'center', marginTop: '5rem' }}>
+            <Title order={1} c="terracotta.7">Welcome to POSSible</Title>
+            <Text c="dimmed" size="lg" mt="md" mb="xl">
+                A hospitality‑centred experience. No pressure, just appreciation.
+            </Text>
+            <Button component={Link} to="/tab" variant="filled" color="terracotta" size="md">
+                View My Tab
+            </Button>
+        </Container>
     );
 }

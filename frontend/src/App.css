@@ -1,44 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 * {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-  font-family: system-ui, sans-serif;
-  background: #f8fafc;
-  color: #1e293b;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: #faf8f5;   /* warm off‑white */
+  color: #2e2e2e;
+  line-height: 1.6;
 }
 
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
 
 .btn-primary {
-  background: #2563eb;
-  color: #fff;
+  background-color: #d49b6a;   /* warm terracotta */
+  color: white;
   border: none;
-  padding: 9px 18px;
+  padding: 0.75rem 1.5rem;
   border-radius: 6px;
-  cursor: pointer;
+  font-weight: 600;
   font-size: 0.95rem;
-  text-decoration: none;
-  display: inline-block;
+  transition: background 0.2s;
 }
 
 .btn-primary:hover {
-  background: #1d4ed8;
-}
-
-.btn-secondary {
-  background: transparent;
-  border: 1px solid #cbd5e1;
-  color: #475569;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  text-decoration: none;
-  display: inline-block;
-}
-
-.btn-secondary:hover {
-  background: #f1f5f9;
+  background-color: #c28650;
 }

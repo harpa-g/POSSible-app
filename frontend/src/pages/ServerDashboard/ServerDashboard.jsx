@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
+import { Container, Title, Card, Text, Group, Button, Badge, Stack } from '@mantine/core';
 import { getPendingFeedbacks, acknowledgeFeedback } from '../../services/server.service';
-import styles from './ServerDashboard.module.css';
 
 export default function ServerDashboard() {
     const [feedbacks, setFeedbacks] = useState([]);
@@ -18,18 +18,29 @@ export default function ServerDashboard() {
     }
 
     return (
-        <div className={styles.page}>
-            <h1>Server Dashboard – Removals needing attention</h1>
-            {feedbacks.length === 0 && <p>No pending removals.</p>}
-            <ul>
+        <Container size="md" my="xl">
+            <Title order={1} mb="lg">Server Dashboard – Removals needing attention</Title>
+            {feedbacks.length === 0 && <Text c="dimmed">No pending removals.</Text>}
+            <Stack gap="sm">
                 {feedbacks.map(f => (
-                    <li key={f.id}>
-                        <strong>Item ID:</strong> {f.menuItemId} —
-                        <strong> Reason:</strong> {f.reason}
-                        <button onClick={() => handleAcknowledge(f.id)}>Resolved (talked to customer)</button>
-                    </li>
+                    <Card key={f.id} shadow="xs" padding="md" radius="md" withBorder>
+                        <Group justify="space-between" align="center">
+                            <div>
+                                <Text size="sm" fw={500}>Item ID: {f.menuItemId}</Text>
+                                <Text size="xs" c="dimmed">Reason: {f.reason}</Text>
+                            </div>
+                            <Button
+                                variant="light"
+                                color="terracotta"
+                                size="xs"
+                                onClick={() => handleAcknowledge(f.id)}
+                            >
+                                Resolved
+                            </Button>
+                        </Group>
+                    </Card>
                 ))}
-            </ul>
-        </div>
+            </Stack>
+        </Container>
     );
 }

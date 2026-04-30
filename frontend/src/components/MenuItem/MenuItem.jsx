@@ -1,17 +1,33 @@
-import styles from './MenuItem.module.css';
+import { Card, Image, Text, Group, Button } from '@mantine/core';
 
-export default function MenuItemCard({ item, onAddToTab }) {
+export default function MenuItem({ item, onAddToTab }) {
     return (
-        <li className={styles.productLine}>
-            <img src={item.image} alt={item.name} className={styles.image} />
-            <div className={styles.info}>
-                <span className={styles.name}>{item.name}</span>
-                <span className={styles.description}>{item.description}</span>
-                <span className={styles.price}>€{item.price.toFixed(2)}</span>
-            </div>
-            <button className={styles.addBtn} onClick={() => onAddToTab(item.id)}>
-                Add to tab
-            </button>
-        </li>
+        <Card shadow="xs" padding="sm" radius="md" withBorder>
+            <Group wrap="nowrap" gap="sm">
+                <Image
+                    src={item.image}
+                    alt={item.name}
+                    width={60}
+                    height={60}
+                    radius="md"
+                    fit="cover"
+                    style={{ minWidth: 60 }}
+                />
+                <div style={{ flex: 1 }}>
+                    <Text fw={600} size="sm">{item.name}</Text>
+                    <Text size="xs" c="dimmed" lineClamp={1}>{item.description}</Text>
+                    <Text fw={600} c="terracotta.6" size="sm">€{item.price.toFixed(2)}</Text>
+                </div>
+                <Button
+                    variant="light"
+                    color="terracotta"
+                    size="xs"
+                    radius="md"
+                    onClick={() => onAddToTab(item.id)}
+                >
+                    Add to tab
+                </Button>
+            </Group>
+        </Card>
     );
 }

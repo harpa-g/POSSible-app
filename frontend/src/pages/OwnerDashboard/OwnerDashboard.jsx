@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
+import { Container, Title, Card, Table, TextInput, Button, Group, Text, SimpleGrid, NumberInput, Paper } from '@mantine/core';
 import { getMenuItems, createMenuItem, updateMenuItem, deleteMenuItem } from '../../services/menuItem.service';
 import { getDailyReport } from '../../services/owner.service';
-import styles from './OwnerDashboard.module.css';
 
-const emptyForm = { name: '', description: '', price: '', image: '' };
+const emptyForm = { name: '', description: '', price: 0, image: '' };
 
 export default function OwnerDashboard() {
     const [menuItems, setMenuItems] = useState([]);
@@ -25,8 +25,8 @@ export default function OwnerDashboard() {
         setReport(data);
     }
 
-    function handleChange(e) {
-        setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    function handleChange(field, value) {
+        setForm(prev => ({ ...prev, [field]: value }));
     }
 
     async function handleSubmit(e) {
@@ -34,7 +34,7 @@ export default function OwnerDashboard() {
         const item = {
             name: form.name,
             description: form.description,
-            price: parseFloat(form.price),
+            price: form.price,
             image: form.image
         };
         if (editingId) {
@@ -52,7 +52,7 @@ export default function OwnerDashboard() {
         setForm({
             name: item.name,
             description: item.description,
-            price: item.price.toString(),
+            price: item.price,
             image: item.image
         });
     }
@@ -69,67 +69,123 @@ export default function OwnerDashboard() {
         }
     }
 
+    const rows = menuItems.map(item => (
+        <Table.Tr key={item.id}>
+            <Table.Td>{item.id}</Table.Td>
+            <Table.Td>{item.name}</Table.Td>
+            <Table.Td>€{item.price.toFixed(2)}</Table.Td>
+            <Table.Td>{item.image}</Table.Td>
+            <Table.Td>
+                <Group gap="xs">
+                    <Button variant="subtle" size="xs" onClick={() => handleEdit(item)}>Edit</Button>
+                    <Button variant="subtle" color="red" size="xs" onClick={() => handleDelete(item.id)}>Delete</Button>
+                </Group>
+            </Table.Td>
+        </Table.Tr>
+    ));
+
     return (
-        <div className={styles.page}>
-            <h1>Owner Panel</h1>
+        <Container size="lg" my="xl">
+            <Title order={1} mb="lg">Owner Panel</Title>
 
-            {/* Menu management */}
-            <div className={styles.formCard}>
-                <h2>{editingId ? 'Edit Menu Item' : 'Add New Menu Item'}</h2>
+            <Card shadow="sm" padding="lg" radius="md" withBorder mb="xl">
+                <Title order={3} mb="md">{editingId ? `Editing Item #${editingId}` : 'Add New Menu Item'}</Title>
                 <form onSubmit={handleSubmit}>
-                    <div className={styles.fields}>
-                        <input name="name" value={form.name} onChange={handleChange} placeholder="Name" required />
-                        <input name="description" value={form.description} onChange={handleChange} placeholder="Description" />
-                        <input name="price" type="number" step="0.01" value={form.price} onChange={handleChange} placeholder="Price" required />
-                        <input name="image" value={form.image} onChange={handleChange} placeholder="/images/xxx.jpg" />
-                    </div>
-                    <div className={styles.formActions}>
-                        <button type="submit">{editingId ? 'Update' : 'Add'}</button>
-                        {editingId && <button type="button" onClick={handleCancelEdit}>Cancel</button>}
-                    </div>
+                    <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
+                        <TextInput
+                            label="Name"
+                            value={form.name}
+                            onChange={(e) => handleChange('name', e.currentTarget.value)}
+                            required
+                        />
+                        <TextInput
+                            label="Description"
+                            value={form.description}
+                            onChange={(e) => handleChange('description', e.currentTarget.value)}
+                        />
+                        <NumberInput
+                            label="Price (€)"
+                            value={form.price}
+                            onChange={(value) => handleChange('price', value)}
+                            min={0}
+                            step={0.01}
+                            decimalScale={2}
+                            fixedDecimalScale
+                            required
+                        />
+                        <TextInput
+                            label="Image URL"
+                            value={form.image}
+                            onChange={(e) => handleChange('image', e.currentTarget.value)}
+                            placeholder="/images/xxx.jpg"
+                        />
+                    </SimpleGrid>
+                    <Group mt="md">
+                        <Button type="submit" color="terracotta">{editingId ? 'Update' : 'Add'}</Button>
+                        {editingId && (
+                            <Button variant="outline" color="gray" onClick={handleCancelEdit}>Cancel</Button>
+                        )}
+                    </Group>
                 </form>
-            </div>
+            </Card>
 
-            <table className={styles.table}>
-                <thead>
-                    <tr>
-                        <th>ID</th><th>Name</th><th>Price</th><th>Image</th><th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {menuItems.map(item => (
-                        <tr key={item.id}>
-                            <td>{item.id}</td>
-                            <td>{item.name}</td>
-                            <td>€{item.price.toFixed(2)}</td>
-                            <td>{item.image}</td>
-                            <td>
-                                <button onClick={() => handleEdit(item)}>Edit</button>
-                                <button onClick={() => handleDelete(item.id)}>Delete</button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            <Card shadow="sm" padding="lg" radius="md" withBorder mb="xl">
+                <Title order={3} mb="md">Menu Items</Title>
+                <Table striped highlightOnHover>
+                    <Table.Thead>
+                        <Table.Tr>
+                            <Table.Th>ID</Table.Th>
+                            <Table.Th>Name</Table.Th>
+                            <Table.Th>Price</Table.Th>
+                            <Table.Th>Image</Table.Th>
+                            <Table.Th>Actions</Table.Th>
+                        </Table.Tr>
+                    </Table.Thead>
+                    <Table.Tbody>{rows}</Table.Tbody>
+                </Table>
+            </Card>
 
-            {/* Daily Report */}
-            <h2>Daily Report</h2>
-            <input type="date" value={reportDate} onChange={e => setReportDate(e.target.value)} />
-            {report && (
-                <div className={styles.report}>
-                    <p>Orders: {report.totalOrders}</p>
-                    <p>Revenue: €{report.totalRevenue?.toFixed(2)}</p>
-                    <p>Extra (tips): €{report.totalTips?.toFixed(2)}</p>
-                    <p>Removals: {report.totalRemovals}</p>
-                    {report.feedbacks?.length > 0 && (
-                        <ul>
-                            {report.feedbacks.map(f => (
-                                <li key={f.id}>Item {f.menuItemId}: {f.reason}</li>
-                            ))}
-                        </ul>
-                    )}
-                </div>
-            )}
-        </div>
+            <Card shadow="sm" padding="lg" radius="md" withBorder>
+                <Title order={3} mb="md">Daily Report</Title>
+                <TextInput
+                    type="date"
+                    value={reportDate}
+                    onChange={(e) => setReportDate(e.currentTarget.value)}
+                    mb="md"
+                    style={{ maxWidth: 200 }}
+                />
+                {report ? (
+                    <div>
+                        <SimpleGrid cols={{ base: 1, sm: 3 }}>
+                            <Paper p="sm" withBorder>
+                                <Text size="sm" c="dimmed">Orders</Text>
+                                <Text fw={700}>{report.totalOrders}</Text>
+                            </Paper>
+                            <Paper p="sm" withBorder>
+                                <Text size="sm" c="dimmed">Revenue</Text>
+                                <Text fw={700}>€{report.totalRevenue?.toFixed(2)}</Text>
+                            </Paper>
+                            <Paper p="sm" withBorder>
+                                <Text size="sm" c="dimmed">Extra (tips)</Text>
+                                <Text fw={700}>€{report.totalTips?.toFixed(2)}</Text>
+                            </Paper>
+                        </SimpleGrid>
+                        <Paper p="sm" withBorder mt="md">
+                            <Text size="sm" c="dimmed">Removals</Text>
+                            <Text fw={700}>{report.totalRemovals}</Text>
+                            {report.feedbacks?.length > 0 && (
+                                <ul style={{ marginTop: '0.5rem' }}>
+                                    {report.feedbacks.map(f => (
+                                        <li key={f.id}><Text size="xs">Item {f.menuItemId}: {f.reason}</Text></li>
+                                    ))}
+                                </ul>
+                            )}
+                        </Paper>
+                    </div>
+                ) : (
+                    <Text c="dimmed">Loading...</Text>
+                )}
+            </Card>
+        </Container>
     );
 }
