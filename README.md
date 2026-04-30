@@ -1,8 +1,5 @@
 # POSSible-app
 
-! NEW !
-# POSSible App
-
 Click the image below to view the interactive Figma prototype:
 
 [![Interactive Figma Mockup](./backend/src/main/resources/static/images/mockupgif.gif)](https://fade-widget-32093428.figma.site/)
