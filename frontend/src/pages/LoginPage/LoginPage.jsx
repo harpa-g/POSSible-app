@@ -18,9 +18,13 @@ export default function LoginPage({ onLoginSuccess }) {
             const data = await login(username, password);
             saveAuth(data);
             onLoginSuccess(data);
-            navigate('/products');
+            // Redirect based on role
+            if (data.role === 'CUSTOMER') navigate('/tab');
+            else if (data.role === 'SERVER') navigate('/server');
+            else if (data.role === 'OWNER') navigate('/owner');
+            else navigate('/home');
         } catch {
-            setError('Invalid username or password.');
+            setError('Invalid credentials.');
         } finally {
             setLoading(false);
         }
@@ -29,26 +33,15 @@ export default function LoginPage({ onLoginSuccess }) {
     return (
         <div className={styles.page}>
             <div className={styles.card}>
-                <h1 className={styles.title}>Login</h1>
+                <h1 className={styles.title}>Login to POSSible</h1>
                 <form onSubmit={handleSubmit} className={styles.form}>
                     <div className={styles.field}>
                         <label>Username</label>
-                        <input
-                            type="text"
-                            value={username}
-                            onChange={e => setUsername(e.target.value)}
-                            required
-                            autoFocus
-                        />
+                        <input type="text" value={username} onChange={e => setUsername(e.target.value)} required autoFocus />
                     </div>
                     <div className={styles.field}>
                         <label>Password</label>
-                        <input
-                            type="password"
-                            value={password}
-                            onChange={e => setPassword(e.target.value)}
-                            required
-                        />
+                        <input type="password" value={password} onChange={e => setPassword(e.target.value)} required />
                     </div>
                     {error && <p className={styles.error}>{error}</p>}
                     <button type="submit" className="btn-primary" disabled={loading}>
@@ -56,7 +49,7 @@ export default function LoginPage({ onLoginSuccess }) {
                     </button>
                 </form>
                 <p className={styles.hint}>
-                    user / user &nbsp; &nbsp; user2 / user2 &nbsp; &nbsp; admin / admin
+                    customer / customer &nbsp; | &nbsp; server / server &nbsp; | &nbsp; owner / owner
                 </p>
             </div>
         </div>

@@ -27,11 +27,6 @@ public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
 
-    // @Lazy breaks the circular dependency:
-    // JwtFilter needs UserDetailsService
-    // UserDetailsService is defined here in SecurityConfig
-    // SecurityConfig needs JwtFilter → cycle
-    // @Lazy tells Spring to inject a proxy and only resolve it when first used
     public SecurityConfig(@Lazy JwtFilter jwtFilter) {
         this.jwtFilter = jwtFilter;
     }
@@ -44,18 +39,19 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService(PasswordEncoder encoder) {
         return new InMemoryUserDetailsManager(
-                User.withUsername("user")
-                        .password(encoder.encode("user"))
-                        .roles("USER")
+                User.withUsername("customer")
+                        .password(encoder.encode("customer"))
+                        .roles("CUSTOMER")
                         .build(),
-                User.withUsername("user2")
-                        .password(encoder.encode("user2"))
-                        .roles("USER")
+                User.withUsername("server")
+                        .password(encoder.encode("server"))
+                        .roles("SERVER")
                         .build(),
-                User.withUsername("admin")
-                        .password(encoder.encode("admin"))
-                        .roles("ADMIN")
-                        .build());
+                User.withUsername("owner")
+                        .password(encoder.encode("owner"))
+                        .roles("OWNER")
+                        .build()
+        );
     }
 
     @Bean
@@ -70,16 +66,23 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        // public
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/images/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/products").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
-                        .requestMatchers("/api/cart/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/products").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/products/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/orders").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/orders/checkout").authenticated()
-                        .anyRequest().authenticated())
+                        // menu items are viewable by anyone (optional)
+                        .requestMatchers(HttpMethod.GET, "/api/menu-items").permitAll()
+                        // customer endpoints
+                        .requestMatchers("/api/tabs/**").hasRole("CUSTOMER")
+                        .requestMatchers("/api/pay/**").hasRole("CUSTOMER")
+                        // server endpoints
+                        .requestMatchers("/api/server/**").hasRole("SERVER")
+                        // owner endpoints
+                        .requestMatchers("/api/owner/**").hasRole("OWNER")
+                        .requestMatchers(HttpMethod.POST, "/api/menu-items").hasRole("OWNER")
+                        .requestMatchers(HttpMethod.PUT, "/api/menu-items/**").hasRole("OWNER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/menu-items/**").hasRole("OWNER")
+                        .anyRequest().authenticated()
+                )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

@@ -1,0 +1,8 @@
+.page { padding: 20px; }
+.split { display: flex; gap: 40px; }
+.menuSection, .tabSection { flex: 1; }
+.list { list-style: none; padding: 0; }
+.total { margin: 20px 0; font-size: 1.2rem; }
+.payment { display: flex; gap: 10px; }
+.payment input { flex: 1; }
+.extra { font-style: italic; color: #666; }

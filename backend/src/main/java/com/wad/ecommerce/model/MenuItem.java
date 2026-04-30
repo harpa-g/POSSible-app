@@ -1,21 +1,19 @@
 package com.wad.ecommerce.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
 @Entity
-@Table(name = "products")
-@AllArgsConstructor
+@Table(name = "menu_items")
+@Data
 @NoArgsConstructor
-public class Product {
+@AllArgsConstructor
+public class MenuItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String description;
-    private double price;
-    private String image; 
+    private double price;      // in euros
+    private String image;      // relative URL, e.g., /images/cake.jpg
 }

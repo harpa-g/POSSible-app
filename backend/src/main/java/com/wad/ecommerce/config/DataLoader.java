@@ -1,7 +1,7 @@
 package com.wad.ecommerce.config;
 
-import com.wad.ecommerce.model.Product;
-import com.wad.ecommerce.repository.ProductRepository;
+import com.wad.ecommerce.model.MenuItem;
+import com.wad.ecommerce.repository.MenuItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -12,21 +12,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DataLoader implements CommandLineRunner {
 
-    private final ProductRepository productRepository;
+    private final MenuItemRepository menuItemRepository;
 
     @Override
     public void run(String... args) {
-        if (productRepository.count() > 0) return; // don't seed if already has data
+        if (menuItemRepository.count() > 0) return;
 
-        productRepository.saveAll(List.of(
-            new Product(1L, "Car",    "Dacia Estafette",       1299.99, "http://localhost:8080/images/car.jpg"),
-            new Product(2L, "Computer", "Felix PC",           199.99, "http://localhost:8080/images/pc.jpg"),
-            new Product(3L, "Office", "Office Suite",    89.99,  "http://localhost:8080/images/office.jpg"),
-            new Product(4L, "Windows",       "Windows XP",                   49.99, "http://localhost:8080/images/windows.jpg"),
-            new Product(5L, "Cake",        "Traditional cake",          9.99,  "http://localhost:8080/images/cake.jpg")
-    ));
-
-
-        System.out.println("DataLoader: seeded 6 products.");
+        menuItemRepository.saveAll(List.of(
+                new MenuItem(null, "Espresso", "Strong Italian coffee", 2.50, "/images/espresso.jpg"),
+                new MenuItem(null, "Cappuccino", "Espresso with steamed milk", 3.50, "/images/cappuccino.jpg"),
+                new MenuItem(null, "Croissant", "Buttery French pastry", 2.80, "/images/croissant.jpg"),
+                new MenuItem(null, "Cheesecake", "New York style", 5.00, "/images/cheesecake.jpg"),
+                new MenuItem(null, "Tea", "Earl Grey", 2.00, "/images/tea.jpg")
+        ));
+        System.out.println("DataLoader: seeded 5 menu items.");
     }
 }

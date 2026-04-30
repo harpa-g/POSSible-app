@@ -30,8 +30,16 @@ export function isLoggedIn() {
     return !!localStorage.getItem('token');
 }
 
-export function isAdmin() {
-    return localStorage.getItem('role') === 'ROLE_ADMIN';
+export function isCustomer() {
+    return getRole() === 'CUSTOMER';
+}
+
+export function isServer() {
+    return getRole() === 'SERVER';
+}
+
+export function isOwner() {
+    return getRole() === 'OWNER';
 }
 
 export function logout() {
