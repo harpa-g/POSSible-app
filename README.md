@@ -1,8 +1,11 @@
 # POSSible-app
 
 ! NEW !
-Figma mockup available here.
-[https://www.figma.com/make/5iM7ymw95CXtOVt3Cks9a7/Mobile-mockup-for-POSSible?t=VHuUfagCmnQHlSY3-1](https://fade-widget-32093428.figma.site/)
+# POSSible App
+
+Click the image below to view the interactive Figma prototype:
+
+[![Interactive Figma Mockup](./backend/src/main/resources/static/images/mockupgif.gif)](https://www.figma.com/proto/YOUR_ACTUAL_FIGMA_LINK_HERE)
 
 View the status of the app development via Trello here
 https://trello.com/invite/b/69e9fd8604f1df590d7549d4/ATTIb094546df76a8b8a648e16fc2f59110663884E69/possible
