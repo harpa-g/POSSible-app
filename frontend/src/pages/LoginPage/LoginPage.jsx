@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login, saveAuth } from '../../services/auth.service';
-import { Paper, Title, TextInput, PasswordInput, Button, Alert, Text } from '@mantine/core';
+import { Container, Card, Form, Button, Alert } from 'react-bootstrap';
 
 export default function LoginPage({ onLoginSuccess }) {
     const [username, setUsername] = useState('');
@@ -30,35 +30,43 @@ export default function LoginPage({ onLoginSuccess }) {
     }
 
     return (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
-            <Paper radius="lg" withBorder shadow="md" p="xl" style={{ width: '100%', maxWidth: 380 }}>
-                <Title order={2} ta="center" mb="md" c="terracotta.7">Login to POSSible</Title>
-                <form onSubmit={handleSubmit}>
-                    <TextInput
-                        label="Username"
-                        placeholder="your username"
-                        value={username}
-                        onChange={(e) => setUsername(e.currentTarget.value)}
-                        required
-                        autoFocus
-                    />
-                    <PasswordInput
-                        label="Password"
-                        placeholder="your password"
-                        value={password}
-                        onChange={(e) => setPassword(e.currentTarget.value)}
-                        required
-                        mt="sm"
-                    />
-                    {error && <Alert color="red" mt="sm">{error}</Alert>}
-                    <Button type="submit" fullWidth mt="md" loading={loading} color="terracotta">
-                        {loading ? 'Logging in...' : 'Login'}
-                    </Button>
-                </form>
-                <Text c="dimmed" size="xs" ta="center" mt="md">
-                    customer / customer &nbsp; | &nbsp; server / server &nbsp; | &nbsp; owner / owner
-                </Text>
-            </Paper>
-        </div>
+        <Container className="d-flex justify-content-center align-items-center" style={{ minHeight: '80vh' }}>
+            <Card style={{ width: '100%', maxWidth: '400px' }} className="shadow-sm">
+                <Card.Body>
+                    <h2 className="text-center mb-4" style={{ color: '#d49b6a' }}>Login to POSSible</h2>
+                    <Form onSubmit={handleSubmit}>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Username</Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder="your username"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                required
+                                autoFocus
+                            />
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Password</Form.Label>
+                            <Form.Control
+                                type="password"
+                                placeholder="your password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                            />
+                        </Form.Group>
+                        {error && <Alert variant="danger">{error}</Alert>}
+                        <Button type="submit" className="w-100" disabled={loading}
+                            style={{ backgroundColor: '#d49b6a', borderColor: '#d49b6a' }}>
+                            {loading ? 'Logging in...' : 'Login'}
+                        </Button>
+                    </Form>
+                    <p className="text-muted small text-center mt-3">
+                        customer / customer &nbsp;|&nbsp; server / server &nbsp;|&nbsp; owner / owner
+                    </p>
+                </Card.Body>
+            </Card>
+        </Container>
     );
 }

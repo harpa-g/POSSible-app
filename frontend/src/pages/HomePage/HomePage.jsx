@@ -1,14 +1,12 @@
-import { Container, Title, Text, Button } from '@mantine/core';
+import { Container, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 export default function HomePage() {
     return (
-        <Container size="sm" style={{ textAlign: 'center', marginTop: '5rem' }}>
-            <Title order={1} c="terracotta.7">Welcome to POSSible</Title>
-            <Text c="dimmed" size="lg" mt="md" mb="xl">
-                A hospitality‑centred experience. No pressure, just appreciation.
-            </Text>
-            <Button component={Link} to="/tab" variant="filled" color="terracotta" size="md">
+        <Container className="text-center my-5">
+            <h1 style={{ color: '#d49b6a' }}>Welcome to POSSible</h1>
+            <p className="text-muted lead">A hospitality‑centred experience. No pressure, just appreciation.</p>
+            <Button as={Link} to="/tab" size="lg" style={{ backgroundColor: '#d49b6a', borderColor: '#d49b6a' }}>
                 View My Tab
             </Button>
         </Container>

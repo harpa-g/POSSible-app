@@ -1,8 +1,8 @@
 import { NavLink, useNavigate } from 'react-router-dom';
-import { Group, Anchor, Button, Badge, Text, Box } from '@mantine/core';
+import { Navbar, Nav, Container, Button } from 'react-bootstrap';
 import { logout } from '../../services/auth.service';
 
-export default function Navbar({ auth, onLogout }) {
+export default function AppNavbar({ auth, onLogout }) {
     const navigate = useNavigate();
 
     function handleLogout() {
@@ -11,76 +11,40 @@ export default function Navbar({ auth, onLogout }) {
         navigate('/login');
     }
 
-    const linkStyle = (isActive) => ({
-        fontWeight: isActive ? 600 : 400,
-        color: isActive ? 'var(--mantine-color-terracotta-6)' : 'var(--mantine-color-warmGray-7)',
-        textDecoration: 'none',
-        paddingBottom: '4px',
-        borderBottom: isActive ? '2px solid var(--mantine-color-terracotta-5)' : '2px solid transparent',
-        transition: 'border 0.2s',
-    });
-
     return (
-        <Box
-            component="nav"
-            style={{
-                backgroundColor: 'white',
-                boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
-                position: 'sticky',
-                top: 0,
-                zIndex: 100,
-                padding: '0 2rem',
-                height: '64px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-            }}
-        >
-            <Anchor component={NavLink} to="/home" underline="never" style={{ fontSize: '1.5rem', fontWeight: 700, color: '#d49b6a' }}>
-                POSSible
-            </Anchor>
-
-            <Group gap="lg">
-                <Anchor component={NavLink} to="/home" underline="never"
-                    style={({ isActive }) => linkStyle(isActive)}>
-                    Home
-                </Anchor>
-                {auth.isLoggedIn && (
-                    <>
-                        {auth.role === 'CUSTOMER' && (
-                            <Anchor component={NavLink} to="/tab" underline="never"
-                                style={({ isActive }) => linkStyle(isActive)}>
-                                My Tab
-                            </Anchor>
+        <Navbar bg="white" expand="md" sticky="top" style={{ boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
+            <Container>
+                <Navbar.Brand as={NavLink} to="/home" style={{ fontWeight: 700, color: '#d49b6a', fontSize: '1.5rem' }}>
+                    POSSible
+                </Navbar.Brand>
+                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Collapse id="basic-navbar-nav">
+                    <Nav className="me-auto">
+                        <Nav.Link as={NavLink} to="/home">Home</Nav.Link>
+                        {auth.isLoggedIn && auth.role === 'CUSTOMER' && (
+                            <Nav.Link as={NavLink} to="/tab">My Tab</Nav.Link>
                         )}
-                        {auth.role === 'SERVER' && (
-                            <Anchor component={NavLink} to="/server" underline="never"
-                                style={({ isActive }) => linkStyle(isActive)}>
-                                Dashboard
-                            </Anchor>
+                        {auth.isLoggedIn && auth.role === 'SERVER' && (
+                            <Nav.Link as={NavLink} to="/server">Dashboard</Nav.Link>
                         )}
-                        {auth.role === 'OWNER' && (
-                            <Anchor component={NavLink} to="/owner" underline="never"
-                                style={({ isActive }) => linkStyle(isActive)}>
-                                Owner Panel
-                            </Anchor>
+                        {auth.isLoggedIn && auth.role === 'OWNER' && (
+                            <Nav.Link as={NavLink} to="/owner">Owner Panel</Nav.Link>
                         )}
-                    </>
-                )}
-                {auth.isLoggedIn ? (
-                    <Group gap="sm">
-                        <Text size="sm" c="dimmed">{auth.username} ({auth.role})</Text>
-                        <Button variant="outline" size="xs" color="warmGray.5" onClick={handleLogout}>
-                            Logout
-                        </Button>
-                    </Group>
-                ) : (
-                    <Anchor component={NavLink} to="/login" underline="never"
-                        style={({ isActive }) => linkStyle(isActive)}>
-                        Login
-                    </Anchor>
-                )}
-            </Group>
-        </Box>
+                    </Nav>
+                    <Nav>
+                        {auth.isLoggedIn ? (
+                            <>
+                                <Navbar.Text className="me-2 text-muted">
+                                    {auth.username} ({auth.role})
+                                </Navbar.Text>
+                                <Button variant="outline-secondary" size="sm" onClick={handleLogout}>Logout</Button>
+                            </>
+                        ) : (
+                            <Nav.Link as={NavLink} to="/login">Login</Nav.Link>
+                        )}
+                    </Nav>
+                </Navbar.Collapse>
+            </Container>
+        </Navbar>
     );
 }

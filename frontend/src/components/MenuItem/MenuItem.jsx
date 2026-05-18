@@ -1,33 +1,30 @@
-import { Card, Image, Text, Group, Button } from '@mantine/core';
+import { Card, Button } from 'react-bootstrap';
 
 export default function MenuItem({ item, onAddToTab }) {
     return (
-        <Card shadow="xs" padding="sm" radius="md" withBorder>
-            <Group wrap="nowrap" gap="sm">
-                <Image
+        <Card className="mb-2">
+            <Card.Body className="d-flex align-items-center gap-3 p-2">
+                <img
                     src={item.image}
                     alt={item.name}
-                    width={60}
-                    height={60}
-                    radius="md"
-                    fit="cover"
-                    style={{ minWidth: 60 }}
+                    width="60"
+                    height="60"
+                    className="rounded"
+                    style={{ objectFit: 'cover' }}
                 />
-                <div style={{ flex: 1 }}>
-                    <Text fw={600} size="sm">{item.name}</Text>
-                    <Text size="xs" c="dimmed" lineClamp={1}>{item.description}</Text>
-                    <Text fw={600} c="terracotta.6" size="sm">€{item.price.toFixed(2)}</Text>
+                <div className="flex-grow-1">
+                    <Card.Title className="mb-0 fs-6">{item.name}</Card.Title>
+                    <Card.Text className="text-muted small mb-1">{item.description}</Card.Text>
+                    <span className="fw-bold" style={{ color: '#d49b6a' }}>€{item.price.toFixed(2)}</span>
                 </div>
                 <Button
-                    variant="light"
-                    color="terracotta"
-                    size="xs"
-                    radius="md"
+                    size="sm"
+                    style={{ backgroundColor: '#d49b6a', borderColor: '#d49b6a' }}
                     onClick={() => onAddToTab(item.id)}
                 >
-                    Add to tab
+                    Add
                 </Button>
-            </Group>
+            </Card.Body>
         </Card>
     );
 }

@@ -1,5 +1,5 @@
 import { useSearchParams } from 'react-router-dom';
-import { Container, Title, Text, Button } from '@mantine/core';
+import { Container, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 export default function PaymentSuccess() {
@@ -8,13 +8,11 @@ export default function PaymentSuccess() {
     const amount = searchParams.get('amount');
 
     return (
-        <Container size="xs" style={{ textAlign: 'center', marginTop: '4rem' }}>
-            <Title order={2} c="green.7">Payment Successful!</Title>
-            <Text size="lg" mt="md">Table {table} – you paid €{parseFloat(amount).toFixed(2)}</Text>
-            <Text c="dimmed" mt="sm">Thank you for dining with us. Your server appreciates you.</Text>
-            <Button component={Link} to="/home" variant="outline" color="terracotta" mt="xl">
-                Back to Home
-            </Button>
+        <Container className="text-center my-5">
+            <h2 className="text-success">Payment Successful!</h2>
+            <p className="lead">Table {table} – you paid €{parseFloat(amount).toFixed(2)}</p>
+            <p className="text-muted">Thank you for dining with us. Your server appreciates you.</p>
+            <Button as={Link} to="/home" variant="outline" style={{ borderColor: '#d49b6a', color: '#d49b6a' }}>Back to Home</Button>
         </Container>
     );
 }

@@ -1,19 +1,18 @@
 import { useEffect, useState } from 'react';
-import { Container, Grid, Card, Title, Text, Group, Button, Badge, TextInput, Paper, Notification, rem } from '@mantine/core';
+import { Container, Row, Col, Card, Button, Form, Badge, Alert } from 'react-bootstrap';
 import { getMenuItems } from '../../services/menuItem.service';
 import { getTab, addToTab, removeItemFromTab } from '../../services/tab.service';
 import { createPayment } from '../../services/payment.service';
 import MenuItem from '../../components/MenuItem/MenuItem';
-import { IconCheck } from '@tabler/icons-react';
 
-const TABLE_NUMBER = 1; // In a real app, this would be dynamic or entered by the customer
+const TABLE_NUMBER = 1;
 
 export default function CustomerTabPage() {
     const [menuItems, setMenuItems] = useState([]);
     const [tab, setTab] = useState(null);
     const [paymentAmount, setPaymentAmount] = useState('');
     const [message, setMessage] = useState('');
-    const [msgColor, setMsgColor] = useState('green');
+    const [msgVariant, setMsgVariant] = useState('success');
 
     useEffect(() => {
         getMenuItems().then(setMenuItems);
@@ -33,10 +32,10 @@ export default function CustomerTabPage() {
         try {
             const updated = await addToTab(TABLE_NUMBER, menuItemId);
             setTab(updated);
-            setMsgColor('green');
+            setMsgVariant('success');
             setMessage('Item added to tab.');
         } catch (e) {
-            setMsgColor('red');
+            setMsgVariant('danger');
             setMessage('Failed to add item.');
         }
     }
@@ -46,20 +45,21 @@ export default function CustomerTabPage() {
         if (!reason) return;
         const ok = await removeItemFromTab(TABLE_NUMBER, menuItemId, reason);
         if (ok) {
-            setMsgColor('green');
+            setMsgVariant('success');
             setMessage('Item removed. Server has been notified.');
             loadTab();
         } else {
-            setMsgColor('red');
+            setMsgVariant('danger');
             setMessage('Removal failed.');
         }
     }
 
     async function handlePay() {
-        const billTotal = tab?.totalBill || 0;
+        const activeItems = tab?.items?.filter(i => i.status === 'ACTIVE') || [];
+        const billTotal = activeItems.reduce((sum, item) => sum + item.price, 0);
         const amount = parseFloat(paymentAmount);
         if (isNaN(amount) || amount < billTotal) {
-            setMsgColor('red');
+            setMsgVariant('danger');
             setMessage(`Amount must be at least €${billTotal.toFixed(2)}`);
             return;
         }
@@ -67,105 +67,98 @@ export default function CustomerTabPage() {
             const result = await createPayment(TABLE_NUMBER, amount);
             window.location.href = result.redirectUrl;
         } catch (e) {
-            setMsgColor('red');
+            setMsgVariant('danger');
             setMessage('Payment failed: ' + e.message);
         }
     }
 
-    if (!tab) return <Text align="center" mt="xl">Loading tab...</Text>;
+    if (!tab) return <div className="text-center mt-5">Loading tab...</div>;
 
     const activeItems = tab.items.filter(i => i.status === 'ACTIVE');
     const removedItems = tab.items.filter(i => i.status === 'REMOVED');
+    const billTotal = activeItems.reduce((sum, item) => sum + item.price, 0);
 
     return (
-        <Container size="xl" my="xl">
-            <Title order={1} mb="lg">Your Tab (Table {TABLE_NUMBER})</Title>
+        <Container className="py-4">
+            <h1 className="mb-4">Your Tab (Table {TABLE_NUMBER})</h1>
             {message && (
-                <Notification
-                    icon={<IconCheck style={{ width: rem(18), height: rem(18) }} />}
-                    color={msgColor}
-                    onClose={() => setMessage('')}
-                    mb="md"
-                    withCloseButton
-                >
+                <Alert variant={msgVariant} dismissible onClose={() => setMessage('')}>
                     {message}
-                </Notification>
+                </Alert>
             )}
 
-            <Grid>
-                <Grid.Col span={{ base: 12, md: 6 }}>
-                    <Card shadow="sm" padding="lg" radius="md" withBorder>
-                        <Title order={3} mb="md">Menu</Title>
-                        {menuItems.map(item => (
-                            <MenuItem key={item.id} item={item} onAddToTab={handleAddToTab} />
-                        ))}
+            <Row>
+                <Col md={6} className="mb-4">
+                    <Card>
+                        <Card.Header className="fw-bold">Menu</Card.Header>
+                        <Card.Body>
+                            {menuItems.map(item => (
+                                <MenuItem key={item.id} item={item} onAddToTab={handleAddToTab} />
+                            ))}
+                        </Card.Body>
                     </Card>
-                </Grid.Col>
+                </Col>
 
-                <Grid.Col span={{ base: 12, md: 6 }}>
-                    <Card shadow="sm" padding="lg" radius="md" withBorder>
-                        <Title order={3} mb="md">Your current order</Title>
-                        {activeItems.length === 0 ? (
-                            <Text c="dimmed">No items yet.</Text>
-                        ) : (
-                            activeItems.map(item => (
-                                <Group key={item.menuItemId} justify="space-between" py="xs" style={{ borderBottom: '1px solid #f0f0f0' }}>
-                                    <Text size="sm">{item.name} – €{item.price.toFixed(2)}</Text>
-                                    <Button
-                                        variant="subtle"
-                                        color="red"
-                                        size="xs"
-                                        onClick={() => handleRemove(item.menuItemId)}
-                                    >
-                                        Remove
-                                    </Button>
-                                </Group>
-                            ))
-                        )}
+                <Col md={6} className="mb-4">
+                    <Card>
+                        <Card.Header className="fw-bold">Your current order</Card.Header>
+                        <Card.Body>
+                            {activeItems.length === 0 ? (
+                                <p className="text-muted">No items yet.</p>
+                            ) : (
+                                activeItems.map(item => (
+                                    <div key={item.menuItemId} className="d-flex justify-content-between align-items-center border-bottom py-2">
+                                        <span>{item.name} – €{item.price.toFixed(2)}</span>
+                                        <Button variant="outline-danger" size="sm" onClick={() => handleRemove(item.menuItemId)}>
+                                            Remove
+                                        </Button>
+                                    </div>
+                                ))
+                            )}
 
-                        {removedItems.length > 0 && (
-                            <>
-                                <Title order={4} mt="md" c="dimmed">Removed items</Title>
-                                {removedItems.map(item => (
-                                    <Text key={item.menuItemId} size="xs" c="dimmed" fs="italic" py="xs">
-                                        {item.name} – reason: {item.removalReason || 'No reason given'}
-                                    </Text>
-                                ))}
-                            </>
-                        )}
+                            {removedItems.length > 0 && (
+                                <>
+                                    <h6 className="mt-3 text-muted">Removed items</h6>
+                                    {removedItems.map(item => (
+                                        <div key={item.menuItemId} className="text-muted small fst-italic py-1">
+                                            {item.name} – reason: {item.removalReason || 'No reason given'}
+                                        </div>
+                                    ))}
+                                </>
+                            )}
 
-                        <Group justify="flex-end" mt="lg">
-                            <Text fw={700} size="lg">Bill total: €{tab.totalBill.toFixed(2)}</Text>
-                        </Group>
+                            <div className="d-flex justify-content-end mt-3">
+                                <span className="fw-bold fs-5">Bill total: €{billTotal.toFixed(2)}</span>
+                            </div>
 
-                        <Paper bg="warmGray.0" p="md" radius="md" mt="md">
-                            <TextInput
-                                type="number"
-                                step="0.01"
-                                min={tab.totalBill}
-                                value={paymentAmount}
-                                onChange={(e) => setPaymentAmount(e.currentTarget.value)}
-                                placeholder="Enter amount to pay"
-                                rightSection={<Text size="sm" c="dimmed">€</Text>}
-                                styles={{ input: { fontSize: '1rem' } }}
-                            />
-                            <Button
-                                fullWidth
-                                mt="sm"
-                                size="md"
-                                color="terracotta"
-                                onClick={handlePay}
-                                disabled={!paymentAmount}
-                            >
-                                Pay with Revolut
-                            </Button>
-                            <Badge color="gray.6" variant="light" mt="xs" style={{ fontStyle: 'italic', fontWeight: 400 }}>
-                                Any extra is appreciated, but entirely optional.
-                            </Badge>
-                        </Paper>
+                            <div className="bg-light p-3 mt-3 rounded">
+                                <Form.Group>
+                                    <Form.Control
+                                        type="number"
+                                        step="0.01"
+                                        min={billTotal}
+                                        value={paymentAmount}
+                                        onChange={(e) => setPaymentAmount(e.target.value)}
+                                        placeholder="Enter amount to pay"
+                                    />
+                                </Form.Group>
+                                <Button
+                                    className="mt-2 w-100"
+                                    style={{ backgroundColor: '#d49b6a', borderColor: '#d49b6a' }}
+                                    size="md"
+                                    onClick={handlePay}
+                                    disabled={!paymentAmount}
+                                >
+                                    Pay with Revolut
+                                </Button>
+                                <Badge bg="secondary" className="mt-2 fst-italic text-muted">
+                                    Any extra is appreciated, but entirely optional.
+                                </Badge>
+                            </div>
+                        </Card.Body>
                     </Card>
-                </Grid.Col>
-            </Grid>
+                </Col>
+            </Row>
         </Container>
     );
 }
