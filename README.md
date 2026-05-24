@@ -2,7 +2,7 @@
 
 Click the image below to view the interactive Figma prototype:
 
-[![Interactive Figma Mockup](./backend/src/main/resources/static/images/mockupgif.gif)](https://fade-widget-32093428.figma.site/)
+[![Interactive Figma Mockup](./backend/src/main/resources/static/images/mockupgif.gif)](https://modify-move-72127452.figma.site/)
 
 View the status of the app development via Trello here
 https://trello.com/invite/b/69e9fd8604f1df590d7549d4/ATTIb094546df76a8b8a648e16fc2f59110663884E69/possible
